@@ -205,8 +205,6 @@ extension SignUpViewController {
     }
     
     func additionalInfoSwitchDesign() {
-        additionalInfoSwitch.layer.cornerRadius = 16
-        additionalInfoSwitch.backgroundColor = UIColor.darkGray
-        additionalInfoSwitch.onTintColor = UIColor.systemRed
+        additionalInfoSwitch.configureColor(bg: UIColor.darkGray, on: UIColor.systemRed)
     }
 }
