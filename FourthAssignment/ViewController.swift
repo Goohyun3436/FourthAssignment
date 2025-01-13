@@ -8,12 +8,17 @@
 import UIKit
 
 class ViewController: UIViewController {
+    private let vc = [SignUpViewController(), NpayViewController(), SearchViewController()]
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view.
+        
     }
 
-
+    @IBAction func buttonTapped(_ sender: UIButton) {
+        let vc = vc[sender.tag]
+        vc.modalPresentationStyle = UIModalPresentationStyle.fullScreen
+        present(vc, animated: true)
+    }
 }
 
