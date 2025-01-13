@@ -29,4 +29,19 @@ extension UIViewController {
     @objc func backButtonTapped() {
         dismiss(animated: true)
     }
+    
+    func configureCollectionViewLayout() -> UICollectionViewLayout {
+        let layout = UICollectionViewFlowLayout()
+        
+        let inset: CGFloat = 16
+        let spacing: CGFloat = 16
+        let width: CGFloat = UIScreen.main.bounds.width - inset * 2
+        
+        layout.scrollDirection = .vertical
+        layout.itemSize = CGSize(width: width, height: 50)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: inset, bottom: inset, right: inset)
+        layout.minimumLineSpacing = spacing
+        
+        return layout
+    }
 }
