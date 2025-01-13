@@ -8,10 +8,23 @@
 import UIKit
 
 extension UITextField {
-    func setPlaceholderColor(_ placeholderColor: UIColor) {
+    func configurePlaceholderColor(_ placeholderColor: UIColor) {
         attributedPlaceholder = NSAttributedString(
             string: placeholder ?? "",
             attributes: [NSAttributedString.Key.foregroundColor : placeholderColor]
         )
+    }
+    
+    func configureBorderBottom(width borderWidth: CGFloat, color: UIColor) {
+        let bottomLine = CALayer()
+        bottomLine.frame = CGRect(x: 0, y: frame.height - borderWidth, width: frame.width, height: borderWidth)
+        bottomLine.backgroundColor = color.cgColor
+        borderStyle = UITextField.BorderStyle.none
+        layer.addSublayer(bottomLine)
+    }
+    
+    func configureLeftPadding(_ width: CGFloat) {
+        leftView = UIView(frame: CGRect(x: 0, y: 0, width: width, height: 0))
+        leftViewMode = .always
     }
 }

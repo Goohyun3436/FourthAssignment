@@ -186,7 +186,7 @@ extension SignUpViewController {
         textField.backgroundColor = UIColor.darkGray
         textField.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
         textField.textColor = UIColor.white
-        textField.setPlaceholderColor(UIColor.systemGray4)
+        textField.configurePlaceholderColor(UIColor.systemGray4)
     }
     
     func signupButtonDesign() {
