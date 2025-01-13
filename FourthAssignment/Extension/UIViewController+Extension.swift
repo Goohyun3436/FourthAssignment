@@ -38,7 +38,7 @@ extension UIViewController {
         let width: CGFloat = UIScreen.main.bounds.width - inset * 2
         
         layout.scrollDirection = .vertical
-        layout.itemSize = CGSize(width: width, height: 50)
+        layout.itemSize = CGSize(width: width, height: 28)
         layout.sectionInset = UIEdgeInsets(top: 0, left: inset, bottom: inset, right: inset)
         layout.minimumLineSpacing = spacing
         

@@ -15,6 +15,8 @@ class SearchViewController: UIViewController {
     let searchTextField = UITextField()
     let searchButton = UIButton()
     lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: configureCollectionViewLayout())
+    
+    let movie: [Movie] = MovieInfo().movie
 
     //MARK: - Override Method
     override func viewDidLoad() {
@@ -136,11 +138,15 @@ extension SearchViewController {
 //MARK: - UICollectionView
 extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 10
+        return movie.count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: SearchCollectionViewCell.identifier, for: indexPath) as! SearchCollectionViewCell
+        
+        let row = movie[indexPath.item]
+        cell.configureData(row)
+        
         return cell
     }
 }
