@@ -30,8 +30,10 @@ enum TextFieldType: CaseIterable {
 class SignUpViewController: UIViewController {
     //MARK: - Property
     let logoImageView = UIImageView()
+    let formWrapView = UIStackView()
     let textFieldWrapView = UIStackView()
     lazy var textFields = makeTextFields()
+    let signupButton = UIButton()
 
     //MARK: - Override Method
     override func viewDidLoad() {
@@ -49,12 +51,15 @@ class SignUpViewController: UIViewController {
 extension SignUpViewController {
     func configureLayout() {
         logoImageViewLayout()
+        formWrapViewLayout()
         textFieldWrapViewLayout()
         textFieldLayout()
+        signupButtonLayout()
     }
     
     func configureDesing() {
         logoImageViewDesign()
+        signupButtonDesign()
     }
     
     func makeTextFields() -> [UITextField] {
@@ -87,12 +92,25 @@ extension SignUpViewController {
         }
     }
     
-    func textFieldWrapViewLayout() {
-        view.addSubview(textFieldWrapView)
+    func formWrapViewLayout() {
+        view.addSubview(formWrapView)
         
-        textFieldWrapView.snp.makeConstraints { make in
+        formWrapView.snp.makeConstraints { make in
             make.center.equalTo(view.safeAreaLayoutGuide)
             make.width.equalTo(view.safeAreaLayoutGuide).multipliedBy(0.8)
+        }
+        
+        formWrapView.axis = .vertical
+        formWrapView.spacing = 16
+        
+        formWrapView.backgroundColor = .systemRed
+    }
+    
+    func textFieldWrapViewLayout() {
+        formWrapView.addArrangedSubview(textFieldWrapView)
+        
+        textFieldWrapView.snp.makeConstraints { make in
+            make.horizontalEdges.equalToSuperview()
         }
         
         textFieldWrapView.axis = .vertical
@@ -104,10 +122,18 @@ extension SignUpViewController {
             textFieldWrapView.addArrangedSubview(tf)
             
             tf.snp.makeConstraints { make in
-                make.centerX.equalToSuperview()
-                make.width.equalToSuperview()
+                make.horizontalEdges.equalToSuperview()
                 make.height.equalTo(34)
             }
+        }
+    }
+    
+    func signupButtonLayout() {
+        formWrapView.addArrangedSubview(signupButton)
+    
+        signupButton.snp.makeConstraints { make in
+            make.horizontalEdges.equalToSuperview()
+            make.height.equalTo(44)
         }
     }
 }
@@ -126,5 +152,13 @@ extension SignUpViewController {
         textField.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
         textField.textColor = UIColor.white
         textField.setPlaceholderColor(UIColor.systemGray4)
+    }
+    
+    func signupButtonDesign() {
+        signupButton.setTitle("회원가입", for: .normal)
+        signupButton.layer.cornerRadius = 8
+        signupButton.backgroundColor = UIColor.white
+        signupButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        signupButton.setTitleColor(UIColor.black, for: .normal)
     }
 }
