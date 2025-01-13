@@ -11,6 +11,8 @@ import SnapKit
 class SignUpViewController: UIViewController {
     //MARK: - Property
     let logoImageView = UIImageView()
+    let textFieldWrapView = UIStackView()
+    lazy var textFields = makeTextFields()
 
     //MARK: - Override Method
     override func viewDidLoad() {
@@ -28,10 +30,31 @@ class SignUpViewController: UIViewController {
 extension SignUpViewController {
     func configureLayout() {
         logoImageViewLayout()
+        textFieldWrapViewLayout()
+        textFieldLayout()
     }
     
     func configureDesing() {
         logoImageViewDesign()
+    }
+}
+
+enum TextFieldType: CaseIterable {
+    case email, password, nickname, location, promocode
+    
+    var placeholder: String {
+        switch self {
+            case .email:
+                return "이메일 주소 또는 전화번호"
+            case .password:
+                return "비밀번호"
+            case .nickname:
+                return "닉네임"
+            case .location:
+                return "위치"
+            case .promocode:
+                return "추천 코드 입력"
+        }
     }
 }
 
@@ -47,6 +70,47 @@ extension SignUpViewController {
             make.height.equalTo(40)
         }
     }
+    
+    func textFieldWrapViewLayout() {
+        view.addSubview(textFieldWrapView)
+        
+        textFieldWrapView.snp.makeConstraints { make in
+            make.center.equalTo(view.safeAreaLayoutGuide)
+            make.width.equalTo(view.safeAreaLayoutGuide).multipliedBy(0.8)
+        }
+        
+        textFieldWrapView.axis = .vertical
+        textFieldWrapView.spacing = 16
+        textFieldWrapView.backgroundColor = .systemRed
+    }
+    
+    func textFieldLayout() {
+        for tf in textFields {
+            textFieldWrapView.addArrangedSubview(tf)
+            
+            tf.snp.makeConstraints { make in
+                make.centerX.equalToSuperview()
+                make.width.equalToSuperview()
+                make.height.equalTo(34)
+            }
+        }
+    }
+    
+    func makeTextFields() -> [UITextField] {
+        var result = [UITextField]()
+        
+        for item in TextFieldType.allCases {
+            let tf = UITextField()
+            
+            tf.placeholder = item.placeholder
+            
+            textFieldDesign(tf)
+            
+            result.append(tf)
+        }
+        
+        return result
+    }
 }
 
 //MARK: - Design
@@ -54,5 +118,13 @@ extension SignUpViewController {
     func logoImageViewDesign() {
         logoImageView.image = UIImage(named: "gooflix")
         logoImageView.contentMode = .scaleAspectFit
+    }
+    
+    func textFieldDesign(_ textField: UITextField) {
+        textField.layer.cornerRadius = 4
+        textField.textAlignment = .center
+        textField.backgroundColor = UIColor.systemGray
+        textField.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
+        textField.textColor = UIColor.white
     }
 }
