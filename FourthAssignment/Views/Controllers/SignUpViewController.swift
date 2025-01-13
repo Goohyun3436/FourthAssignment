@@ -34,6 +34,9 @@ class SignUpViewController: UIViewController {
     let textFieldWrapView = UIStackView()
     lazy var textFields = makeTextFields()
     let signupButton = UIButton()
+    let additionalInfoWrap = UIStackView()
+    let additionalInfoLabel = UILabel()
+    let additionalInfoSwitch = UISwitch()
 
     //MARK: - Override Method
     override func viewDidLoad() {
@@ -55,11 +58,16 @@ extension SignUpViewController {
         textFieldWrapViewLayout()
         textFieldLayout()
         signupButtonLayout()
+        additionalInfoWrapLayout()
+        additionalInfoLabelLayout()
+        additionalInfoSwitchLayout()
     }
     
     func configureDesing() {
         logoImageViewDesign()
         signupButtonDesign()
+        additionalInfoLabelDesign()
+        additionalInfoSwitchDesign()
     }
     
     func makeTextFields() -> [UITextField] {
@@ -102,8 +110,6 @@ extension SignUpViewController {
         
         formWrapView.axis = .vertical
         formWrapView.spacing = 16
-        
-        formWrapView.backgroundColor = .systemRed
     }
     
     func textFieldWrapViewLayout() {
@@ -136,6 +142,36 @@ extension SignUpViewController {
             make.height.equalTo(44)
         }
     }
+    
+    func additionalInfoWrapLayout() {
+        formWrapView.addArrangedSubview(additionalInfoWrap)
+        
+        additionalInfoWrap.snp.makeConstraints { make in
+            make.horizontalEdges.equalToSuperview()
+        }
+        
+        additionalInfoWrap.axis = .horizontal
+        additionalInfoWrap.distribution = .equalSpacing
+    }
+    
+    func additionalInfoLabelLayout() {
+        additionalInfoWrap.addArrangedSubview(additionalInfoLabel)
+        
+        additionalInfoLabel.snp.makeConstraints { make in
+            make.verticalEdges.equalToSuperview()
+            make.leading.equalToSuperview()
+        }
+    }
+    
+    func additionalInfoSwitchLayout() {
+        additionalInfoWrap.addArrangedSubview(additionalInfoSwitch)
+        
+        additionalInfoSwitch.snp.makeConstraints { make in
+            make.trailing.equalToSuperview()
+        }
+        
+        additionalInfoSwitch.setOn(false, animated: true)
+    }
 }
 
 //MARK: - Design
@@ -160,5 +196,17 @@ extension SignUpViewController {
         signupButton.backgroundColor = UIColor.white
         signupButton.titleLabel?.font = UIFont.systemFont(ofSize: 16, weight: .bold)
         signupButton.setTitleColor(UIColor.black, for: .normal)
+    }
+    
+    func additionalInfoLabelDesign() {
+        additionalInfoLabel.text = "추가 정보 입력"
+        additionalInfoLabel.font = UIFont.systemFont(ofSize: 14)
+        additionalInfoLabel.textColor = UIColor.systemGray4
+    }
+    
+    func additionalInfoSwitchDesign() {
+        additionalInfoSwitch.layer.cornerRadius = 16
+        additionalInfoSwitch.backgroundColor = UIColor.darkGray
+        additionalInfoSwitch.onTintColor = UIColor.systemRed
     }
 }
