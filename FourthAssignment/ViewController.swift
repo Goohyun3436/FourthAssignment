@@ -16,6 +16,7 @@ class ViewController: UIViewController {
     }
 
     @IBAction func buttonTapped(_ sender: UIButton) {
+        print(#function)
         let vc = vc[sender.tag]
         vc.modalPresentationStyle = UIModalPresentationStyle.fullScreen
         present(vc, animated: true)
