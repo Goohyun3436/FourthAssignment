@@ -93,10 +93,9 @@ extension SignUpViewController {
         view.addSubview(logoImageView)
         
         logoImageView.snp.makeConstraints { make in
-            make.centerX.equalTo(view.safeAreaLayoutGuide)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(120)
-            make.width.equalTo(view.safeAreaLayoutGuide).multipliedBy(0.7)
-            make.height.equalTo(40)
+            make.horizontalEdges.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(view.safeAreaLayoutGuide).offset(80)
+            make.height.equalTo(34)
         }
     }
     
@@ -104,7 +103,8 @@ extension SignUpViewController {
         view.addSubview(formWrapView)
         
         formWrapView.snp.makeConstraints { make in
-            make.center.equalTo(view.safeAreaLayoutGuide)
+            make.centerX.equalTo(view.safeAreaLayoutGuide)
+            make.centerY.equalTo(view.safeAreaLayoutGuide).offset(50)
             make.width.equalTo(view.safeAreaLayoutGuide).multipliedBy(0.8)
         }
         
