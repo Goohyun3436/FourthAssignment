@@ -56,6 +56,9 @@ extension SearchViewController {
         collectionView.dataSource = self
         
         collectionView.register(SearchCollectionViewCell.self, forCellWithReuseIdentifier: SearchCollectionViewCell.identifier)
+        
+        collectionView.keyboardDismissMode = .onDrag
+        collectionView.alwaysBounceVertical = true
     }
 }
 
@@ -133,7 +136,6 @@ extension SearchViewController {
         searchButton.setTitleColor(UIColor.black, for: .normal)
     }
 }
-
 
 //MARK: - UICollectionView
 extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSource {
