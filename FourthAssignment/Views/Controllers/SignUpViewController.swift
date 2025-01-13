@@ -42,8 +42,6 @@ class SignUpViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        view.backgroundColor = .black
-        
         addSubviewBackButton()
         configureLayout()
         configureDesing()
@@ -64,6 +62,7 @@ extension SignUpViewController {
     }
     
     func configureDesing() {
+        view.backgroundColor = .black
         logoImageViewDesign()
         signupButtonDesign()
         additionalInfoLabelDesign()
