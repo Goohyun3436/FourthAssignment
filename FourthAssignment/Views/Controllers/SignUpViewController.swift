@@ -8,6 +8,25 @@
 import UIKit
 import SnapKit
 
+enum TextFieldType: CaseIterable {
+    case email, password, nickname, location, promocode
+    
+    var placeholder: String {
+        switch self {
+            case .email:
+                return "이메일 주소 또는 전화번호"
+            case .password:
+                return "비밀번호"
+            case .nickname:
+                return "닉네임"
+            case .location:
+                return "위치"
+            case .promocode:
+                return "추천 코드 입력"
+        }
+    }
+}
+
 class SignUpViewController: UIViewController {
     //MARK: - Property
     let logoImageView = UIImageView()
@@ -37,24 +56,21 @@ extension SignUpViewController {
     func configureDesing() {
         logoImageViewDesign()
     }
-}
-
-enum TextFieldType: CaseIterable {
-    case email, password, nickname, location, promocode
     
-    var placeholder: String {
-        switch self {
-            case .email:
-                return "이메일 주소 또는 전화번호"
-            case .password:
-                return "비밀번호"
-            case .nickname:
-                return "닉네임"
-            case .location:
-                return "위치"
-            case .promocode:
-                return "추천 코드 입력"
+    func makeTextFields() -> [UITextField] {
+        var result = [UITextField]()
+        
+        for item in TextFieldType.allCases {
+            let tf = UITextField()
+            
+            tf.placeholder = item.placeholder
+            
+            textFieldDesign(tf)
+            
+            result.append(tf)
         }
+        
+        return result
     }
 }
 
@@ -81,7 +97,6 @@ extension SignUpViewController {
         
         textFieldWrapView.axis = .vertical
         textFieldWrapView.spacing = 16
-        textFieldWrapView.backgroundColor = .systemRed
     }
     
     func textFieldLayout() {
@@ -95,22 +110,6 @@ extension SignUpViewController {
             }
         }
     }
-    
-    func makeTextFields() -> [UITextField] {
-        var result = [UITextField]()
-        
-        for item in TextFieldType.allCases {
-            let tf = UITextField()
-            
-            tf.placeholder = item.placeholder
-            
-            textFieldDesign(tf)
-            
-            result.append(tf)
-        }
-        
-        return result
-    }
 }
 
 //MARK: - Design
@@ -123,8 +122,9 @@ extension SignUpViewController {
     func textFieldDesign(_ textField: UITextField) {
         textField.layer.cornerRadius = 4
         textField.textAlignment = .center
-        textField.backgroundColor = UIColor.systemGray
+        textField.backgroundColor = UIColor.darkGray
         textField.font = UIFont.systemFont(ofSize: 14, weight: .semibold)
         textField.textColor = UIColor.white
+        textField.setPlaceholderColor(UIColor.systemGray4)
     }
 }
