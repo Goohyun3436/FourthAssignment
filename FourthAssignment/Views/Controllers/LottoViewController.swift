@@ -39,7 +39,7 @@ class LottoViewController: UIViewController {
     
     
     //MARK - Property
-    private let drwNoList = [Int](800...1156)
+    private let drwNoList = [Int](800...1154)
     private var selectedDrwNo: Int = 0 {
         didSet {
             textField.text = "\(selectedDrwNo)"
@@ -78,12 +78,6 @@ class LottoViewController: UIViewController {
     //MARK - Override Method
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        if let lastNo = drwNoList.last {
-            selectedDrwNo = lastNo
-        } else {
-            lotto = nil
-        }
 
         view.backgroundColor = UIColor.systemBackground
         addSubviewBackButton(color: UIColor.label)
@@ -91,6 +85,16 @@ class LottoViewController: UIViewController {
         configureLayout()
         configureDesign()
         configurePickerView()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        if let lastNo = drwNoList.last {
+            selectedDrwNo = lastNo
+        } else {
+            lotto = nil
+        }
     }
     
     override func viewDidLayoutSubviews() {
