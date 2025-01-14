@@ -9,6 +9,58 @@ import UIKit
 import Alamofire
 import SnapKit
 
+enum Ball {
+    case normal, plus, bnus
+    
+    var label: UILabel {
+        switch self {
+            case .normal:
+                return normalBall()
+            case .plus:
+                return plusBall()
+            case .bnus:
+                return bnusBall()
+        }
+    }
+    
+    var ballWidth: CGFloat {
+        let deviceWidth: CGFloat = UIScreen.main.bounds.width
+        let inset: CGFloat = 24
+        let ballSpacing: CGFloat = 4
+        let ballCount: CGFloat = 8
+        let ballWidth = (deviceWidth - inset * 2 - ballSpacing * (ballCount - 1)) / ballCount
+        return ballWidth
+    }
+    
+    func normalBall() -> UILabel {
+        let label = UILabel()
+        let ballColor = [UIColor.systemOrange, UIColor.systemCyan, UIColor.systemRed, UIColor.systemGray]
+        label.backgroundColor = ballColor.randomElement()!
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        label.textColor = UIColor.white
+        return label
+    }
+    
+    func plusBall() -> UILabel {
+        let label = UILabel()
+        label.text = "+"
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        label.textColor = UIColor.label
+        return label
+    }
+    
+    func bnusBall() -> UILabel {
+        let label = UILabel()
+        label.backgroundColor = UIColor.systemGray
+        label.textAlignment = .center
+        label.font = UIFont.systemFont(ofSize: 12, weight: .bold)
+        label.textColor = UIColor.white
+        return label
+    }
+}
+
 class LottoViewController: UIViewController {
     //MARK - UI Property
     private let textField = UITextField()
@@ -23,14 +75,17 @@ class LottoViewController: UIViewController {
     private let drwNoBlackLabel  = UILabel()
     
     private let drwtNoWrapView = UIStackView()
-    private let drwtNoLabels = [UILabel(), UILabel(), UILabel(), UILabel(), UILabel(), UILabel()]
-//    private let drwtNoLabels = Array(repeating: UILabel(), count: 6) -> 레이블 6개의 메모리 주소값이 다 똑 같음.. -> 찾아보기
-    private let plusLabel = {
-        let label = UILabel()
-        label.text = "+"
-        return label
-    }()
-    private let bnusNoLabel = UILabel()
+    //    private let drwtNoLabels = Array(repeating: UILabel(), count: 6) -> 레이블 6개의 메모리 주소값이 다 똑 같음.. -> 찾아보기
+    private let drwtNoLabels = [
+        Ball.normal.label,
+        Ball.normal.label,
+        Ball.normal.label,
+        Ball.normal.label,
+        Ball.normal.label,
+        Ball.normal.label,
+        Ball.plus.label,
+        Ball.bnus.label
+    ]
     private let bnusNoTextLabel = {
         let label = UILabel()
         label.text = "보너스"
@@ -49,29 +104,11 @@ class LottoViewController: UIViewController {
     private var lotto: Lotto? {
         didSet {
             guard let lotto else {
-                dateLabel.isHidden = true
-                drwNoLabel.isHidden = true
-                drwNoBlackLabel.text = "결과가 없습니다."
-                drwtNoWrapView.isHidden = true
-                bnusNoTextLabel.isHidden = true
+                hideResult()
                 return
             }
             
-            dateLabel.isHidden = false
-            drwNoLabel.isHidden = false
-            drwNoBlackLabel.text = "당첨결과"
-            drwtNoWrapView.isHidden = false
-            bnusNoTextLabel.isHidden = false
-            
-            dateLabel.text = "\(lotto.drwNoDate) 추첨"
-            drwNoLabel.text = "\(lotto.drwNo)회"
-            drwtNoLabels[0].text = "\(lotto.drwtNo1)"
-            
-            let drwts = [lotto.drwtNo1, lotto.drwtNo2, lotto.drwtNo3, lotto.drwtNo4, lotto.drwtNo5, lotto.drwtNo6]
-            for i in drwts.indices {
-                drwtNoLabels[i].text = "\(drwts[i])"
-            }
-            bnusNoLabel.text = "\(lotto.bnusNo)"
+            showResult(lotto)
         }
     }
     
@@ -103,7 +140,6 @@ class LottoViewController: UIViewController {
         for item in drwtNoLabels {
             item.configureCircle()
         }
-        bnusNoLabel.configureCircle()
     }
 }
 
@@ -124,8 +160,6 @@ extension LottoViewController {
         for item in drwtNoLabels {
             drwtNoWrapView.addArrangedSubview(item)
         }
-        drwtNoWrapView.addArrangedSubview(plusLabel)
-        drwtNoWrapView.addArrangedSubview(bnusNoLabel)
         
         view.addSubview(bnusNoTextLabel)
     }
@@ -176,32 +210,16 @@ extension LottoViewController {
         drwtNoWrapView.spacing = 4
         drwtNoWrapView.distribution = .equalSpacing
         
-        let deviceWidth: CGFloat = UIScreen.main.bounds.width
-        let inset: CGFloat = 24
-        let ballSpacing: CGFloat = 4
-        let ballCount: CGFloat = 8
-        let ballWidth = (deviceWidth - inset * 2 - ballSpacing * (ballCount - 1)) / ballCount
-        
         for item in drwtNoLabels {
             item.snp.makeConstraints { make in
                 make.centerY.equalToSuperview()
-                make.size.equalTo(ballWidth)
+                make.size.equalTo(Ball.normal.ballWidth)
             }
         }
         
-        plusLabel.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.size.equalTo(ballWidth)
-        }
-        
-        bnusNoLabel.snp.makeConstraints { make in
-            make.centerY.equalToSuperview()
-            make.size.equalTo(ballWidth)
-        }
-        
         bnusNoTextLabel.snp.makeConstraints { make in
-            make.centerX.equalTo(bnusNoLabel).inset(24)
-            make.top.equalTo(bnusNoLabel.snp.bottom).offset(4)
+            make.centerX.equalTo(drwtNoLabels.last!).inset(24)
+            make.top.equalTo(drwtNoLabels.last!.snp.bottom).offset(4)
         }
     }
     
@@ -225,31 +243,6 @@ extension LottoViewController {
         drwNoBlackLabel.font = UIFont.systemFont(ofSize: 28, weight: .bold)
         drwNoBlackLabel.textColor = UIColor.label
         
-        for i in drwtNoLabels.indices {
-            if i == 0 {
-                drwtNoLabels[i].backgroundColor = UIColor.systemOrange
-            } else if i == 1 || i == 2 {
-                drwtNoLabels[i].backgroundColor = UIColor.systemCyan
-            } else if i == 3 || i == 4 {
-                drwtNoLabels[i].backgroundColor = UIColor.systemRed
-            } else {
-                drwtNoLabels[i].backgroundColor = UIColor.systemGray
-            }
-            drwtNoLabels[i].textAlignment = .center
-            drwtNoLabels[i].font = UIFont.systemFont(ofSize: 12, weight: .bold)
-            drwtNoLabels[i].textColor = UIColor.white
-            drwtNoLabels[i].text = "37"
-        }
-        
-        plusLabel.textAlignment = .center
-        plusLabel.font = UIFont.systemFont(ofSize: 14, weight: .bold)
-        plusLabel.textColor = UIColor.label
-        
-        bnusNoLabel.backgroundColor = UIColor.systemGray
-        bnusNoLabel.textAlignment = .center
-        bnusNoLabel.font = UIFont.systemFont(ofSize: 12, weight: .bold)
-        bnusNoLabel.textColor = UIColor.white
-        
         bnusNoTextLabel.textAlignment = .center
         bnusNoTextLabel.font = UIFont.systemFont(ofSize: 12, weight: .bold)
         bnusNoTextLabel.textColor = UIColor.systemGray
@@ -271,6 +264,32 @@ extension LottoViewController {
                 self.lotto = res
             case .failure(_):
                 self.lotto = nil
+            }
+        }
+    }
+    
+    func hideResult() {
+        dateLabel.isHidden = true
+        drwNoLabel.isHidden = true
+        drwNoBlackLabel.text = "결과가 없습니다."
+        drwtNoWrapView.isHidden = true
+        bnusNoTextLabel.isHidden = true
+    }
+    
+    func showResult(_ lotto: Lotto) {
+        dateLabel.isHidden = false
+        drwNoLabel.isHidden = false
+        drwNoBlackLabel.text = "당첨결과"
+        drwtNoWrapView.isHidden = false
+        bnusNoTextLabel.isHidden = false
+        
+        dateLabel.text = "\(lotto.drwNoDate) 추첨"
+        drwNoLabel.text = "\(lotto.drwNo)회"
+        
+        let drwts = [lotto.drwtNo1, lotto.drwtNo2, lotto.drwtNo3, lotto.drwtNo4, lotto.drwtNo5, lotto.drwtNo6, nil, lotto.bnusNo]
+        for i in drwts.indices {
+            if let num = drwts[i] {
+                drwtNoLabels[i].text = "\(num)"
             }
         }
     }
