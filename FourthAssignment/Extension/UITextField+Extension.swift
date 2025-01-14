@@ -35,4 +35,8 @@ extension UITextField {
         layer.borderColor = borderColor.cgColor
         layer.masksToBounds = true
     }
+    
+    func removeCursor() {
+        tintColor = .clear
+    }
 }

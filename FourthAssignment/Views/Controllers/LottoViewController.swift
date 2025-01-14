@@ -27,12 +27,21 @@ class LottoViewController: UIViewController {
     private let textField = UITextField()
     private let pickerView = UIPickerView()
     private let drwNoList = [Int](800...1154)
+    private var selectedDrwNo: Int = 0 {
+        didSet {
+            print(selectedDrwNo)
+            textField.text = "\(selectedDrwNo)"
+            getLottoResult()
+        }
+    }
     
     //MARK - Override Method
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        getLottoResult(of: drwNoList.last)
+        if let lastNo = drwNoList.last {
+            selectedDrwNo = lastNo
+        }
 
         view.backgroundColor = UIColor.white
         addSubviewBackButton(color: UIColor.black)
@@ -58,6 +67,7 @@ extension LottoViewController {
     }
     
     func configureDesign() {
+        textField.removeCursor()
         textField.configureBorder(width: 0.8, radius: 8, color: UIColor.separator)
         textField.textAlignment = .center
         textField.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
@@ -70,8 +80,8 @@ extension LottoViewController {
         textField.inputView = pickerView
     }
     
-    func getLottoResult(of drwNo: Int?) {
-        let url = "https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=\(drwNo ?? 0)"
+    func getLottoResult() {
+        let url = "https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=\(selectedDrwNo)"
         
         AF.request(url, method: .get).responseDecodable(of: Lotto.self) { response in
             switch response.result {
@@ -99,6 +109,6 @@ extension LottoViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        getLottoResult(of: drwNoList[row])
+        selectedDrwNo = drwNoList[row]
     }
 }
