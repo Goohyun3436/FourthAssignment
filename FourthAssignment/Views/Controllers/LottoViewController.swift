@@ -10,15 +10,29 @@ import Alamofire
 import SnapKit
 
 class LottoViewController: UIViewController {
-    //MARK - Property
+    //MARK - UI Property
     private let textField = UITextField()
     private let pickerView = UIPickerView()
+    private let topWrapView = UIStackView()
+    private let titleLabel = UILabel()
+    private let dateLabel = UILabel()
+    
+    //MARK - Property
     private let drwNoList = [Int](800...1154)
     private var selectedDrwNo: Int = 0 {
         didSet {
             print(selectedDrwNo)
             textField.text = "\(selectedDrwNo)"
             getLottoResult()
+        }
+    }
+    private var lotto: Lotto? {
+        didSet {
+            guard let lotto else {
+                return
+            }
+            
+            dateLabel.text = "\(lotto.drwNoDate) 추첨"
         }
     }
     
@@ -37,19 +51,42 @@ class LottoViewController: UIViewController {
         configureDesign()
         configurePickerView()
     }
+    
+    override func viewDidLayoutSubviews() {
+        topWrapView.addBottomBorderWithColor(color: UIColor.lightGray, width: 1)
+    }
 }
 
 //MARK - Method
 extension LottoViewController {
     func configureHierarchy() {
         view.addSubview(textField)
+        view.addSubview(topWrapView)
+        topWrapView.addArrangedSubview(titleLabel)
+        topWrapView.addArrangedSubview(dateLabel)
     }
     
     func configureLayout() {
         textField.snp.makeConstraints { make in
-            make.horizontalEdges.equalToSuperview().inset(16)
+            make.horizontalEdges.equalToSuperview().inset(32)
             make.top.equalTo(view.safeAreaLayoutGuide).offset(50)
             make.height.equalTo(50)
+        }
+        
+        topWrapView.snp.makeConstraints { make in
+            make.horizontalEdges.equalToSuperview().inset(24)
+            make.top.equalTo(textField.snp.bottom).offset(32)
+            make.height.equalTo(40)
+        }
+        topWrapView.axis = .horizontal
+        topWrapView.distribution = .equalSpacing
+        
+        titleLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
+        }
+        
+        dateLabel.snp.makeConstraints { make in
+            make.centerY.equalToSuperview()
         }
     }
     
@@ -58,6 +95,12 @@ extension LottoViewController {
         textField.configureBorder(width: 0.8, radius: 8, color: UIColor.separator)
         textField.textAlignment = .center
         textField.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+        
+        titleLabel.text = "당첨번호 안내"
+        titleLabel.font = UIFont.systemFont(ofSize: 14, weight: .bold)
+        
+        dateLabel.font = UIFont.systemFont(ofSize: 12)
+        dateLabel.textColor = UIColor.systemGray
     }
     
     func configurePickerView() {
@@ -73,8 +116,10 @@ extension LottoViewController {
         AF.request(url, method: .get).responseDecodable(of: Lotto.self) { response in
             switch response.result {
             case .success(let res):
+                self.lotto = res
                 print(res)
             case .failure(let err):
+                self.lotto = nil
                 print(err)
             }
         }
