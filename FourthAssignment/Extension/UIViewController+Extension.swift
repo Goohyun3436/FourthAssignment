@@ -9,7 +9,7 @@ import UIKit
 import SnapKit
 
 extension UIViewController {
-    func addSubviewBackButton() {
+    func addSubviewBackButton(color: UIColor = .white) {
         let btn = UIButton()
         
         view.addSubview(btn)
@@ -21,7 +21,7 @@ extension UIViewController {
         }
         
         btn.setImage(UIImage(systemName: "xmark"), for: .normal)
-        btn.tintColor = UIColor.white
+        btn.tintColor = color
         
         btn.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
     }
