@@ -269,7 +269,7 @@ extension LottoViewController {
             switch response.result {
             case .success(let res):
                 self.lotto = res
-            case .failure(let err):
+            case .failure(_):
                 self.lotto = nil
             }
         }

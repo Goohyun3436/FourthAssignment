@@ -10,9 +10,9 @@ import SnapKit
 
 class SearchCollectionViewCell: UICollectionViewCell {
     static let identifier = "SearchCollectionViewCell"
-    let indexLabel = UILabel()
-    let contentLabel = UILabel()
-    let dateLabel = UILabel()
+    let rankLabel = UILabel()
+    let movieNmLabel = UILabel()
+    let openDtLabel = UILabel()
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -29,52 +29,55 @@ class SearchCollectionViewCell: UICollectionViewCell {
 
 //MARK: - Method
 extension SearchCollectionViewCell {
-    func configureData(_ row: Movie) {
-        indexLabel.text = "\(row.id + 1)"
-        contentLabel.text = row.name
-        dateLabel.text = row.created_at
+    func configureData(_ row: DailyBoxOffice) {
+        rankLabel.text = row.rank
+        movieNmLabel.text = row.movieNm
+        openDtLabel.text = row.openDt
     }
     
     func configureLayout() {
-        indexLabelLayout()
-        contentLabelLayout()
-        dateLabelLayout()
+        rankLabelLayout()
+        movieNmLabelLayout()
+        openDtLabelLayout()
     }
     
     func configureDesign() {
-        indexLabelDesign()
-        contentLabelDesign()
-        dateLabelDesign()
+        rankLabelDesign()
+        movieNmLabelDesign()
+        openDtLabelDesign()
     }
 }
 
 //MARK: - Layout
 extension SearchCollectionViewCell {
-    func indexLabelLayout() {
-        contentView.addSubview(indexLabel)
+    func rankLabelLayout() {
+        contentView.addSubview(rankLabel)
         
-        indexLabel.snp.makeConstraints { make in
+        rankLabel.snp.makeConstraints { make in
             make.leading.equalTo(contentView.safeAreaLayoutGuide)
             make.verticalEdges.equalTo(contentView.safeAreaLayoutGuide)
             make.width.equalTo(40)
         }
     }
     
-    func contentLabelLayout() {
-        contentView.addSubview(contentLabel)
+    func movieNmLabelLayout() {
+        contentView.addSubview(movieNmLabel)
         
-        contentLabel.snp.makeConstraints { make in
-            make.leading.equalTo(indexLabel.snp.trailing).offset(16)
+        movieNmLabel.snp.makeConstraints { make in
+            make.leading.equalTo(rankLabel.snp.trailing).offset(16)
             make.centerY.equalTo(contentView.safeAreaLayoutGuide)
         }
     }
     
-    func dateLabelLayout() {
-        contentView.addSubview(dateLabel)
+    func openDtLabelLayout() {
+        contentView.addSubview(openDtLabel)
         
-        dateLabel.snp.makeConstraints { make in
-            make.trailing.equalTo(contentView.safeAreaLayoutGuide)
-            make.leading.greaterThanOrEqualTo(contentLabel.snp.trailing).offset(32)
+        openDtLabel.snp.makeConstraints { make in
+            make.trailing.equalTo(contentView.safeAreaLayoutGuide).priority(.required)
+            
+            // 컬렉션 뷰가 리로드 되면서 아래 제약 조건이 풀리는? 이슈 있음 -> 찾아보기
+            make.leading.greaterThanOrEqualTo(movieNmLabel.snp.trailing).offset(32)
+            
             make.centerY.equalTo(contentView.safeAreaLayoutGuide)
         }
     }
@@ -82,20 +85,20 @@ extension SearchCollectionViewCell {
 
 //MARK: - Design
 extension SearchCollectionViewCell {
-    func indexLabelDesign() {
-        indexLabel.textAlignment = .center
-        indexLabel.backgroundColor = UIColor.white
-        indexLabel.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        indexLabel.textColor = UIColor.black
+    func rankLabelDesign() {
+        rankLabel.textAlignment = .center
+        rankLabel.backgroundColor = UIColor.white
+        rankLabel.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        rankLabel.textColor = UIColor.black
     }
     
-    func contentLabelDesign() {
-        contentLabel.font = UIFont.systemFont(ofSize: 16, weight: .bold)
-        contentLabel.textColor = UIColor.white
+    func movieNmLabelDesign() {
+        movieNmLabel.font = UIFont.systemFont(ofSize: 16, weight: .bold)
+        movieNmLabel.textColor = UIColor.white
     }
     
-    func dateLabelDesign() {
-        dateLabel.font = UIFont.systemFont(ofSize: 14)
-        dateLabel.textColor = UIColor.systemGray
+    func openDtLabelDesign() {
+        openDtLabel.font = UIFont.systemFont(ofSize: 14)
+        openDtLabel.textColor = UIColor.systemGray
     }
 }

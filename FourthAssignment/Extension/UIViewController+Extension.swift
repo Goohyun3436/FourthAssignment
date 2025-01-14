@@ -44,4 +44,15 @@ extension UIViewController {
         
         return layout
     }
+    
+    func getYesterday() -> String {
+        let format = DateFormatter()
+        format.dateFormat = "yyyyMMdd"
+        
+        guard let yesterday = Calendar.current.date(byAdding: .day, value: -1, to: Date()) else {
+            return ""
+        }
+        
+        return format.string(from: yesterday)
+    }
 }

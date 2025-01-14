@@ -6,6 +6,7 @@
 //
 
 import UIKit
+import Alamofire
 import SnapKit
 
 class SearchViewController: UIViewController {
@@ -16,7 +17,11 @@ class SearchViewController: UIViewController {
     let searchButton = UIButton()
     lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: configureCollectionViewLayout())
     
-    let movie: [Movie] = MovieInfo().movie
+    var movie = [DailyBoxOffice]() {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
 
     //MARK: - Override Method
     override func viewDidLoad() {
@@ -24,8 +29,18 @@ class SearchViewController: UIViewController {
         
         addSubviewBackButton()
         configureCollectionView()
+        configureSearchTextField()
+        configureSearchButton()
         configureLayout()
         configureDesign()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(true)
+        
+        let yesterDay = getYesterday()
+        getDailyBoxOffice(yesterDay)
+        searchTextField.text = yesterDay
     }
     
     override func viewDidLayoutSubviews() {
@@ -35,6 +50,38 @@ class SearchViewController: UIViewController {
 
 //MARK: - Method
 extension SearchViewController {
+    func getDailyBoxOffice(_ targetDt: String) {
+        let url = Movie.url + "&targetDt=\(targetDt)&itemPerPage=10"
+        
+        AF.request(url, method: .get).responseDecodable(of: Movie.self) { response in
+            switch response.result {
+            case .success(let res):
+                self.movie = res.boxOfficeResult.dailyBoxOfficeList
+            case .failure(_):
+                self.movie = []
+            }
+        }
+    }
+    
+    @objc func searchButtonTapped() {
+        guard let targetDt = searchTextField.text else {
+            movie = []
+            return
+        }
+        
+        let format = DateFormatter()
+        format.dateFormat = "yyyyMMdd"
+        
+        guard format.date(from: targetDt) != nil else {
+            movie = []
+            return
+        }
+        
+        getDailyBoxOffice(targetDt)
+        
+        view.endEditing(true)
+    }
+    
     func configureLayout() {
         backgroundImageViewLayout()
         searchWrapViewLayout()
@@ -59,6 +106,14 @@ extension SearchViewController {
         
         collectionView.keyboardDismissMode = .onDrag
         collectionView.alwaysBounceVertical = true
+    }
+    
+    func configureSearchTextField() {
+        searchTextField.delegate = self
+    }
+    
+    func configureSearchButton() {
+        searchButton.addTarget(self, action: #selector(searchButtonTapped), for: .touchUpInside)
     }
 }
 
@@ -152,3 +207,12 @@ extension SearchViewController: UICollectionViewDelegate, UICollectionViewDataSo
         return cell
     }
 }
+
+//MARK: - UITextField
+extension SearchViewController: UITextFieldDelegate {
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        searchButtonTapped()
+        return true
+    }
+}
+
