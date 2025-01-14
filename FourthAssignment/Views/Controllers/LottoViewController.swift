@@ -11,6 +11,8 @@ import SnapKit
 class LottoViewController: UIViewController {
     //MARK - Property
     private let textField = UITextField()
+    private let pickerView = UIPickerView()
+    private let drwNoRange = [Int](800...1154)
     
     //MARK - Override Method
     override func viewDidLoad() {
@@ -21,6 +23,7 @@ class LottoViewController: UIViewController {
         configureHierarchy()
         configureLayout()
         configureDesign()
+        configurePickerView()
     }
 }
 
@@ -42,5 +45,31 @@ extension LottoViewController {
         textField.configureBorder(width: 0.8, radius: 8, color: UIColor.separator)
         textField.textAlignment = .center
         textField.font = UIFont.systemFont(ofSize: 16, weight: .semibold)
+    }
+    
+    func configurePickerView() {
+        pickerView.delegate = self
+        pickerView.dataSource = self
+        
+        textField.inputView = pickerView
+    }
+}
+
+//MARK - PickerView
+extension LottoViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return drwNoRange.count
+    }
+    
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return "\(drwNoRange[row])"
+    }
+    
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        print(row)
     }
 }
