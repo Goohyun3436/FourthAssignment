@@ -68,7 +68,7 @@ extension LottoViewController {
     }
     
     func getLottoResult() {
-        let url = "https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=\(selectedDrwNo)"
+        let url = Lotto.url + "\(selectedDrwNo)"
         
         AF.request(url, method: .get).responseDecodable(of: Lotto.self) { response in
             switch response.result {
