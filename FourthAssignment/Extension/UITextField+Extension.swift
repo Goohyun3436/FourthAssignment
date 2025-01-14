@@ -27,4 +27,12 @@ extension UITextField {
         leftView = UIView(frame: CGRect(x: 0, y: 0, width: width, height: 0))
         leftViewMode = .always
     }
+    
+    func configureBorder(width borderWidth: CGFloat, radius cornerRadius: CGFloat, color borderColor: UIColor) {
+        borderStyle = .roundedRect
+        layer.borderWidth = borderWidth
+        layer.cornerRadius = cornerRadius
+        layer.borderColor = borderColor.cgColor
+        layer.masksToBounds = true
+    }
 }
