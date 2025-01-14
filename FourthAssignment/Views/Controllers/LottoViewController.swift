@@ -6,17 +6,33 @@
 //
 
 import UIKit
+import Alamofire
 import SnapKit
+
+struct Lotto: Decodable {
+    let returnValue: String  // succes or fail
+    let drwNo: Int
+    let drwNoDate: String
+    let drwtNo1: Int
+    let drwtNo2: Int
+    let drwtNo3: Int
+    let drwtNo4: Int
+    let drwtNo5: Int
+    let drwtNo6: Int
+    let bnusNo: Int
+}
 
 class LottoViewController: UIViewController {
     //MARK - Property
     private let textField = UITextField()
     private let pickerView = UIPickerView()
-    private let drwNoRange = [Int](800...1154)
+    private let drwNoList = [Int](800...1154)
     
     //MARK - Override Method
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        getLottoResult(of: drwNoList.last)
 
         view.backgroundColor = UIColor.white
         addSubviewBackButton(color: UIColor.black)
@@ -53,12 +69,25 @@ extension LottoViewController {
         
         textField.inputView = pickerView
     }
+    
+    func getLottoResult(of drwNo: Int?) {
+        let url = "https://www.dhlottery.co.kr/common.do?method=getLottoNumber&drwNo=\(drwNo ?? 0)"
+        
+        AF.request(url, method: .get).responseDecodable(of: Lotto.self) { response in
+            switch response.result {
+            case .success(let res):
+                print(res)
+            case .failure(let err):
+                print(err)
+            }
+        }
+    }
 }
 
 //MARK - PickerView
 extension LottoViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-        return drwNoRange.count
+        return drwNoList.count
     }
     
     func numberOfComponents(in pickerView: UIPickerView) -> Int {
@@ -66,10 +95,10 @@ extension LottoViewController: UIPickerViewDelegate, UIPickerViewDataSource {
     }
     
     func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-        return "\(drwNoRange[row])"
+        return "\(drwNoList[row])"
     }
     
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
-        print(row)
+        getLottoResult(of: drwNoList[row])
     }
 }
