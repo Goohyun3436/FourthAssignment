@@ -50,7 +50,7 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
     
     //MARK: - Method
     func callRequest(query: String) {
-        let url = APIUrl.naverShop + "?query=\(query)"
+        let url = APIUrl.naverShop + "?query=\(query)&display=100"
         
         let header: HTTPHeaders = [
             "X-Naver-Client-Id": APIKey.naverClientId,
