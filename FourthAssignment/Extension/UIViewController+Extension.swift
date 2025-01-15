@@ -32,6 +32,12 @@ extension UIViewController {
         navigationItem.leftBarButtonItem = btn
     }
     
+    func configureBackButton(title: String, color: UIColor = .gray) {
+        let btn = UIBarButtonItem(title: title, style: .plain, target: self, action: nil)
+        btn.tintColor = color
+        navigationItem.backBarButtonItem = btn
+    }
+    
     @objc func backButtonTapped() {
         dismiss(animated: true)
     }

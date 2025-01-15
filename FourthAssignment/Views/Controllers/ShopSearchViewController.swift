@@ -17,13 +17,17 @@ class ShopSearchViewController: UIViewController, ViewConfiguration {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        addBackButton(color: UIColor.label)
-        
         configureHierarchy()
         configureLayout()
         configureView()
-        
         configureSearchBar()
+    }
+    
+    //MARK: - Method
+    func presentDetailView() {
+        let vc = ShopDetailViewController()
+        vc.searchText = searchBar.text
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     //MARK: - Configure Method
@@ -42,6 +46,8 @@ class ShopSearchViewController: UIViewController, ViewConfiguration {
     func configureView() {
         view.backgroundColor = UIColor.systemBackground
         navigationItem.title = "도봉러의 쇼핑쇼핑"
+        addBackButton(color: UIColor.label)
+        configureBackButton(title: "")
     }
     
     func configureSearchBar() {
@@ -57,10 +63,7 @@ class ShopSearchViewController: UIViewController, ViewConfiguration {
 //MARK: - UISearchTextField
 extension ShopSearchViewController: UISearchBarDelegate {
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
-        view.endEditing(true)
-        searchBar.setShowsCancelButton(false, animated: true)
-        
-        print(#function)
+        presentDetailView()
     }
     
     func searchBarCancelButtonClicked(_ searchBar: UISearchBar) {
