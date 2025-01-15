@@ -6,28 +6,72 @@
 //
 
 import UIKit
+import Alamofire
 import SnapKit
 
 class ShopDetailViewController: UIViewController, ViewConfiguration {
     
     //MARK: - Property
-    var searchText: String?
-    let list = ["1", "2", "3"]
+    var searchText: String? {
+        didSet {
+            navigationItem.title = searchText
+        }
+    }
+    var total: Int = 0 {
+        didSet {
+            totalLabel.text = "\(total)"
+        }
+    }
+    var list = [ShopItem]() {
+        didSet {
+            collectionView.reloadData()
+        }
+    }
     
     //MARK: - UI Property
     let totalLabel = UILabel()
     lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeCollectionViewLayout())
-
+    
     //MARK: - Override Method
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        
         navigationItem.title = searchText
+        
+        if let searchText {
+            callRequest(query: searchText)
+        }
         
         configureHierarchy()
         configureLayout()
         configureView()
         configureCollectionView()
+    }
+    
+    //MARK: - Method
+    func callRequest(query: String) {
+        let url = APIUrl.naverShop + "?query=\(query)"
+        
+        let header: HTTPHeaders = [
+            "X-Naver-Client-Id": APIKey.naverClientId,
+            "X-Naver-Client-Secret": APIKey.naverClientSecret
+        ]
+        
+        AF.request(url, method: .get, headers: header)
+            .responseDecodable(of: Shop.self) { response in
+                
+                switch response.result {
+                case .success(let data):
+                    self.total = data.total
+                    self.list = data.items
+                        
+                case .failure(let err):
+                    self.total = 0
+                    self.list = []
+                    print(err)
+                        
+                }
+            }
     }
     
     //MARK: - Configure Method
@@ -52,7 +96,6 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
     func configureView() {
         view.backgroundColor = UIColor.systemBackground
         
-        totalLabel.text = "13,234,448 개의 검색 결과"
         totalLabel.font = UIFont.systemFont(ofSize: 12, weight: .bold)
         totalLabel.textColor = UIColor.systemGreen
     }
@@ -92,6 +135,10 @@ extension ShopDetailViewController: UICollectionViewDelegate, UICollectionViewDa
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: ShopDetailCollectionViewCell.identifier, for: indexPath) as! ShopDetailCollectionViewCell
+        
+        let row = list[indexPath.item]
+        
+        cell.configureData(row)
         
         return cell
     }

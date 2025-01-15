@@ -7,11 +7,12 @@
 
 import UIKit
 
-class ShopDetailCollectionViewCell: UICollectionViewCell {
+class ShopDetailCollectionViewCell: UICollectionViewCell, ViewConfiguration {
     
     //MARK: - Property
     static let identifier = "ShopDetailCollectionViewCell"
     
+    //MARK: - init Method
     override init(frame: CGRect) {
         super.init(frame: .zero)
         
@@ -22,4 +23,20 @@ class ShopDetailCollectionViewCell: UICollectionViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    //MARK: - Configure Method
+    func configureData(_ row: ShopItem) {
+        print(row)
+    }
+    
+    internal func configureHierarchy() {
+        
+    }
+    
+    internal func configureLayout() {
+        
+    }
+    
+    internal func configureView() {
+        
+    }
 }
