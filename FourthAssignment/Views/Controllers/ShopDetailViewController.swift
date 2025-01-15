@@ -19,7 +19,7 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
     }
     var total: Int = 0 {
         didSet {
-            totalLabel.text = "\(total)"
+            totalLabel.text = "\(total.formatted()) 개의 검색 결과"
         }
     }
     var list = [ShopItem]() {
@@ -114,10 +114,11 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
         let spacing: CGFloat = 16
         let cellPerRow: CGFloat = 2
         let width: CGFloat = (UIScreen.main.bounds.width - inset * 2 - spacing * (cellPerRow - 1)) / cellPerRow
+        let height: CGFloat = width * 1.6
         
         layout.scrollDirection = .vertical
-        layout.itemSize = CGSize(width: width, height: width)
-        layout.sectionInset = UIEdgeInsets(top: inset, left: inset, bottom: inset, right: inset)
+        layout.itemSize = CGSize(width: width, height: height)
+        layout.sectionInset = UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
         layout.minimumLineSpacing = spacing
         layout.minimumInteritemSpacing = spacing
         
