@@ -8,7 +8,6 @@
 import Foundation
 
 struct Movie: Decodable {
-    static let url = "https://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=ee7a3b7ba216421e17c7cac7539866e9"
     let boxOfficeResult: BoxOffice
 }
 

@@ -30,7 +30,7 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
     
     //MARK: - UI Property
     let totalLabel = UILabel()
-    lazy var collectionView = UICollectionView(frame: .zero, collectionViewLayout: makeCollectionViewLayout())
+    let collectionView = ShopItemCollectionView()
     
     //MARK: - Override Method
     override func viewDidLoad() {
@@ -65,7 +65,7 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
                     self.total = data.total
                     self.list = data.items
                         
-                case .failure(let err):
+                case .failure(_):
                     self.total = 0
                     self.list = []
                         
@@ -104,24 +104,6 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
         collectionView.dataSource = self
         
         collectionView.register(ShopDetailCollectionViewCell.self, forCellWithReuseIdentifier: ShopDetailCollectionViewCell.identifier)
-    }
-    
-    func makeCollectionViewLayout() -> UICollectionViewLayout {
-        let layout = UICollectionViewFlowLayout()
-        
-        let inset: CGFloat = 16
-        let spacing: CGFloat = 16
-        let cellPerRow: CGFloat = 2
-        let width: CGFloat = (UIScreen.main.bounds.width - inset * 2 - spacing * (cellPerRow - 1)) / cellPerRow
-        let height: CGFloat = width * 1.6
-        
-        layout.scrollDirection = .vertical
-        layout.itemSize = CGSize(width: width, height: height)
-        layout.sectionInset = UIEdgeInsets(top: 0, left: inset, bottom: 0, right: inset)
-        layout.minimumLineSpacing = spacing
-        layout.minimumInteritemSpacing = spacing
-        
-        return layout
     }
 
 }

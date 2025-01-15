@@ -256,7 +256,7 @@ extension LottoViewController {
     }
     
     func getLottoResult() {
-        let url = Lotto.url + "\(selectedDrwNo)"
+        let url = APIUrl.lotto + "\(selectedDrwNo)"
         
         AF.request(url, method: .get).responseDecodable(of: Lotto.self) { response in
             switch response.result {

@@ -51,7 +51,7 @@ class SearchViewController: UIViewController {
 //MARK: - Method
 extension SearchViewController {
     func getDailyBoxOffice(_ targetDt: String) {
-        let url = Movie.url + "&targetDt=\(targetDt)&itemPerPage=10"
+        let url = APIUrl.kofic + "?key=\(APIKey.kofic)&targetDt=\(targetDt)&itemPerPage=10"
         
         AF.request(url, method: .get).responseDecodable(of: Movie.self) { response in
             switch response.result {
