@@ -9,7 +9,7 @@ import UIKit
 import Kingfisher
 import SnapKit
 
-class ShopDetailCollectionViewCell: UICollectionViewCell, ViewConfiguration {
+class ShopDetailCollectionViewCell: CustomCollectionViewCell, ViewConfiguration {
     
     //MARK: - Property
     static let identifier = "ShopDetailCollectionViewCell"
@@ -28,10 +28,6 @@ class ShopDetailCollectionViewCell: UICollectionViewCell, ViewConfiguration {
         configureHierarchy()
         configureLayout()
         configureView()
-    }
-    
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
     }
     
     //MARK: - Configure Method

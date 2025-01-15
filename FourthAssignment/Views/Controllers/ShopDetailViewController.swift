@@ -68,7 +68,6 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
                 case .failure(let err):
                     self.total = 0
                     self.list = []
-                    print(err)
                         
                 }
             }
