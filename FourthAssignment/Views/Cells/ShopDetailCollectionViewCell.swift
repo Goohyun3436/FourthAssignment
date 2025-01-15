@@ -38,8 +38,11 @@ class ShopDetailCollectionViewCell: UICollectionViewCell, ViewConfiguration {
     func configureData(_ row: ShopItem) {
         let url = URL(string: row.image)
         imageView.kf.setImage(with: url)
+        
         mallNameLabel.text = row.mallName
-        titleLabel.text = row.title
+        
+        titleLabel.text = row.titleToPainText
+        
         lpriceLabel.text = Int(row.lprice)?.formatted()
     }
     

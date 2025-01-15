@@ -17,4 +17,8 @@ struct ShopItem: Decodable {
     let mallName: String
     let title: String
     let lprice: String
+    
+    var titleToPainText: String {
+        return title.toPlainText()
+    }
 }
