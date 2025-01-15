@@ -26,6 +26,12 @@ extension UIViewController {
         btn.addTarget(self, action: #selector(backButtonTapped), for: .touchUpInside)
     }
     
+    func addBackButton(color: UIColor = .white) {
+        let btn = UIBarButtonItem(image: UIImage(systemName: "xmark"), style: .plain, target: self, action: #selector(backButtonTapped))
+        btn.tintColor = color
+        navigationItem.leftBarButtonItem = btn
+    }
+    
     @objc func backButtonTapped() {
         dismiss(animated: true)
     }
