@@ -8,10 +8,24 @@
 import UIKit
 import SnapKit
 
+enum SearchStatus {
+    case normal, short
+    
+    var text: String {
+        switch self {
+            case .normal:
+                return "쇼핑하구팡"
+            case .short:
+                return "검색어를 2글자 이상 입력해주세요"
+        }
+    }
+}
+
 class ShopSearchViewController: UIViewController, ViewConfiguration {
     
     //MARK: - UI Property
     let searchBar = UISearchBar()
+    let statusLabel = UILabel()
     
     //MARK: - Override Method
     override func viewDidLoad() {
@@ -33,6 +47,7 @@ class ShopSearchViewController: UIViewController, ViewConfiguration {
     //MARK: - Configure Method
     func configureHierarchy() {
         view.addSubview(searchBar)
+        view.addSubview(statusLabel)
     }
     
     func configureLayout() {
@@ -41,6 +56,11 @@ class ShopSearchViewController: UIViewController, ViewConfiguration {
             make.top.equalTo(view.safeAreaLayoutGuide)
             make.height.equalTo(34)
         }
+        
+        statusLabel.snp.makeConstraints { make in
+            make.centerX.equalTo(view.safeAreaLayoutGuide)
+            make.top.equalTo(searchBar.snp.bottom).offset(100)
+        }
     }
     
     func configureView() {
@@ -48,6 +68,7 @@ class ShopSearchViewController: UIViewController, ViewConfiguration {
         navigationItem.title = "도봉러의 쇼핑쇼핑"
         addBackButton(color: UIColor.label)
         configureBackButton(title: "")
+        statusLabel.text = SearchStatus.normal.text
     }
     
     func configureSearchBar() {
@@ -62,7 +83,24 @@ class ShopSearchViewController: UIViewController, ViewConfiguration {
 
 //MARK: - UISearchTextField
 extension ShopSearchViewController: UISearchBarDelegate {
+    
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+        guard var text = searchBar.text else {
+            return
+        }
+        
+        text = text.trimmingCharacters(in: .whitespaces)
+        
+        guard !text.isEmpty else {
+            statusLabel.text = SearchStatus.short.text
+            return
+        }
+        
+        guard text.count >= 2 else {
+            statusLabel.text = SearchStatus.short.text
+            return
+        }
+        
         presentDetailView()
     }
     
@@ -74,6 +112,7 @@ extension ShopSearchViewController: UISearchBarDelegate {
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
+        statusLabel.text = SearchStatus.normal.text
     }
     
 }

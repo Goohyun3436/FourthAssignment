@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ShopDetailViewController: UIViewController {
+class ShopDetailViewController: UIViewController, ViewConfiguration {
     
     //MARK: - Property
     var searchText: String?
@@ -16,7 +16,23 @@ class ShopDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        configureHierarchy()
+        configureLayout()
+        configureView()
+    }
+    
+    //MARK: - Configure Method
+    func configureHierarchy() {
         
+    }
+    
+    func configureLayout() {
+        
+    }
+    
+    func configureView() {
+        view.backgroundColor = UIColor.systemBackground
+        navigationItem.title = searchText
     }
 
 }

@@ -17,7 +17,7 @@ class ViewController: UIViewController {
     //MARK - Property
     private let vcs = [
 //        VC(vc: LottoViewController(), title: "로또 API"),
-        VC(vc: SearchViewController(), title: "영화진흥위원회 API"),
+//        VC(vc: SearchViewController(), title: "영화진흥위원회 API"),
         VC(vc: ShopSearchViewController(), title: "도봉러의 쇼핑쇼핑")
     ]
     private let buttonWrapView = UIStackView()
