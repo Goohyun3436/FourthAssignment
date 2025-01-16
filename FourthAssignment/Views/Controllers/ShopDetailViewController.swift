@@ -30,6 +30,8 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
     
     //MARK: - UI Property
     let totalLabel = UILabel()
+//    let sortButtonStackView = ShopSortButtonStackView(action: callShopRequest)
+    let sortButtonStackView = ShopSortButtonStackView()
     let collectionView = ShopItemCollectionView()
     
     //MARK: - Override Method
@@ -39,7 +41,7 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
         navigationItem.title = searchText
         
         if let searchText {
-            callRequest(query: searchText)
+            callShopRequest(query: searchText)
         }
         
         configureHierarchy()
@@ -49,7 +51,7 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
     }
     
     //MARK: - Method
-    func callRequest(query: String) {
+    func callShopRequest(query: String) {
         let url = APIUrl.naverShop + "?query=\(query)&display=100"
         
         let header: HTTPHeaders = [
@@ -76,6 +78,7 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
     //MARK: - Configure Method
     func configureHierarchy() {
         view.addSubview(totalLabel)
+        view.addSubview(sortButtonStackView)
         view.addSubview(collectionView)
     }
     
@@ -85,9 +88,14 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
             make.top.equalTo(view.safeAreaLayoutGuide).offset(16)
         }
         
+        sortButtonStackView.snp.makeConstraints { make in
+            make.leading.equalToSuperview().offset(16)
+            make.top.equalTo(totalLabel.snp.bottom).offset(8)
+        }
+        
         collectionView.snp.makeConstraints { make in
             make.horizontalEdges.equalToSuperview()
-            make.top.equalTo(totalLabel.snp.bottom).offset(16)
+            make.top.equalTo(sortButtonStackView.snp.bottom).offset(8)
             make.bottom.equalTo(view.safeAreaLayoutGuide).inset(16)
         }
     }
