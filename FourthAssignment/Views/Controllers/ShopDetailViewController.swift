@@ -17,6 +17,14 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
             navigationItem.title = searchText
         }
     }
+    var query: String? {
+        didSet {
+            if let query {
+                callShopRequest(query)
+                navigationItem.title = query
+            }
+        }
+    }
     var total: Int = 0 {
         didSet {
             totalLabel.text = "\(total.formatted()) 개의 검색 결과"
@@ -29,8 +37,11 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
     }
     var sort = Sort.sim {
         didSet {
-            sortButtonStackView.changeButtonColors(selected: sort)
-            collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+            if let query {
+                callShopRequest(query)
+                sortButtonStackView.changeButtonColors(selected: sort)
+                collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+            }
         }
     }
     
@@ -43,12 +54,6 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        navigationItem.title = searchText
-        
-        if let searchText {
-            callShopRequest(query: searchText)
-        }
-        
         configureHierarchy()
         configureLayout()
         configureView()
@@ -57,7 +62,7 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
     }
     
     //MARK: - Method
-    func callShopRequest(query: String) {
+    func callShopRequest(_ query: String) {
         let url = APIUrl.naverShop + "?query=\(query)&display=100&sort=\(sort.rawValue)"
         
         let header: HTTPHeaders = [
@@ -84,16 +89,11 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
     @objc func sortButtonTapped(_ sender: UIButton) {
         let button = sender as! SortButton
         
-        guard let searchText else {
-            return
-        }
-        
         guard sort != button.sort else {
             return
         }
         
         sort = button.sort
-        callShopRequest(query: searchText)
     }
     
     //MARK: - Configure Method
@@ -117,7 +117,7 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
         collectionView.snp.makeConstraints { make in
             make.horizontalEdges.equalToSuperview()
             make.top.equalTo(sortButtonStackView.snp.bottom).offset(8)
-            make.bottom.equalTo(view.safeAreaLayoutGuide).inset(16)
+            make.bottom.equalTo(view.safeAreaLayoutGuide)
         }
     }
     
@@ -130,7 +130,7 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
     
     func configureSortButtons() {
         for item in sortButtonStackView.buttons {
-            item.addTarget(self, action: #selector(sortButtonTapped), for: .touchUpInside)
+            item.addTarget(self, action: #selector(sortButtonTapped(_:)), for: .touchUpInside)
         }
     }
     

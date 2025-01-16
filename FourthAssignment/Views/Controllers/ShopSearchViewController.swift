@@ -40,7 +40,7 @@ class ShopSearchViewController: UIViewController, ViewConfiguration {
     //MARK: - Method
     func presentDetailView() {
         let vc = ShopDetailViewController()
-        vc.searchText = searchBar.text
+        vc.query = searchBar.text
         navigationController?.pushViewController(vc, animated: true)
     }
     
