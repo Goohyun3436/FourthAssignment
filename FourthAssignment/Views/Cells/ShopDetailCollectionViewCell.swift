@@ -9,7 +9,7 @@ import UIKit
 import Kingfisher
 import SnapKit
 
-class ShopDetailCollectionViewCell: CustomCollectionViewCell, ViewConfiguration {
+class ShopDetailCollectionViewCell: BaseCollectionViewCell, ViewConfiguration {
     
     //MARK: - Property
     static let identifier = "ShopDetailCollectionViewCell"

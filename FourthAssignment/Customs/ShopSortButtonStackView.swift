@@ -25,7 +25,7 @@ enum Sort: String {
     }
 }
 
-class SortButton: CustomButton {
+class SortButton: BaseButton {
     
     //MARK: - Property
     var sort = Sort.sim
@@ -52,7 +52,7 @@ class SortButton: CustomButton {
     
 }
 
-class ShopSortButtonStackView: CustomStackView {
+class ShopSortButtonStackView: BaseStackView {
     
     //MARK: - UI Property
     let buttons = [

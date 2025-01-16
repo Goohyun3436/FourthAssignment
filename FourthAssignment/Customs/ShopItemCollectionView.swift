@@ -7,7 +7,7 @@
 
 import UIKit
 
-class ShopItemCollectionView: CustomCollectionView {
+class ShopItemCollectionView: BaseCollectionView {
     
     override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
         super.init(frame: .zero, collectionViewLayout: {

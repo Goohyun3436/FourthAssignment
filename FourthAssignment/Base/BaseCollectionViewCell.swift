@@ -1,5 +1,5 @@
 //
-//  CustomCollectionView.swift
+//  BaseCollectionViewCell.swift
 //  FourthAssignment
 //
 //  Created by 구현 on 1/15/25.
@@ -7,10 +7,10 @@
 
 import UIKit
 
-class CustomCollectionView: UICollectionView {
+class BaseCollectionViewCell: UICollectionViewCell {
     
-    override init(frame: CGRect, collectionViewLayout layout: UICollectionViewLayout) {
-        super.init(frame: frame, collectionViewLayout: layout)
+    override init(frame: CGRect) {
+        super.init(frame: .zero)
     }
     
     @available(*, unavailable)
