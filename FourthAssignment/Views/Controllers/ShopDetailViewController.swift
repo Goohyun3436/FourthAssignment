@@ -30,7 +30,6 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
     
     //MARK: - UI Property
     let totalLabel = UILabel()
-//    let sortButtonStackView = ShopSortButtonStackView(action: callShopRequest)
     let sortButtonStackView = ShopSortButtonStackView()
     let collectionView = ShopItemCollectionView()
     
@@ -41,18 +40,19 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
         navigationItem.title = searchText
         
         if let searchText {
-            callShopRequest(query: searchText)
+            callShopRequest(query: searchText, sort: Sort.sim)
         }
         
         configureHierarchy()
         configureLayout()
         configureView()
+        configureSortButtons()
         configureCollectionView()
     }
     
     //MARK: - Method
-    func callShopRequest(query: String) {
-        let url = APIUrl.naverShop + "?query=\(query)&display=100"
+    func callShopRequest(query: String, sort: Sort) {
+        let url = APIUrl.naverShop + "?query=\(query)&display=100&sort=\(sort.rawValue)"
         
         let header: HTTPHeaders = [
             "X-Naver-Client-Id": APIKey.naverClientId,
@@ -73,6 +73,20 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
                         
                 }
             }
+    }
+    
+    @objc func sortButtonTapped(_ sender: UIButton) {
+        let button = sender as! SortButton
+        
+        guard let sortType = button.sort else {
+            return
+        }
+        
+        guard let searchText else {
+            return
+        }
+        
+        callShopRequest(query: searchText, sort: sortType)
     }
     
     //MARK: - Configure Method
@@ -105,6 +119,12 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
         
         totalLabel.font = UIFont.systemFont(ofSize: 12, weight: .bold)
         totalLabel.textColor = UIColor.systemGreen
+    }
+    
+    func configureSortButtons() {
+        for item in sortButtonStackView.buttons {
+            item.addTarget(self, action: #selector(sortButtonTapped), for: .touchUpInside)
+        }
     }
     
     func configureCollectionView() {

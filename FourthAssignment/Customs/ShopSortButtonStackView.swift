@@ -8,17 +8,34 @@
 import UIKit
 import SnapKit
 
+enum Sort: String {
+    case sim, date, asc, dsc
+    
+    var title: String {
+        switch self {
+            case .sim:
+                return "정확도"
+            case .date:
+                return "날짜순"
+            case .dsc:
+                return "가격높은순"
+            case .asc:
+                return "가격낮은순"
+        }
+    }
+}
+
 class SortButton: CustomButton {
     
     //MARK: - Property
+    var sort: Sort?
 //    var select: Bool = false
     
-    init(title: String) {
+    init(_ type: Sort) {
         super.init(frame: .zero)
         
-        addTarget(self, action: #selector(buttonTapped), for: .touchUpInside)
-        
-        setTitle(title, for: .normal)
+        self.sort = type
+        setTitle(type.title, for: .normal)
         layer.cornerRadius = 4
         layer.borderWidth = 1
         layer.borderColor = UIColor.label.cgColor
@@ -27,34 +44,19 @@ class SortButton: CustomButton {
         titleLabel?.font = UIFont.systemFont(ofSize: 14)
         setTitleColor(UIColor.label, for: .normal)
     }
-    
-    @objc func buttonTapped() {
-//        select.toggle()
-//        print(select)
-        print(#function)
-//        callShopRequest
-//        backgroundColor = select ? UIColor.label : UIColor.systemBackground
-    }
 }
 
 class ShopSortButtonStackView: CustomStackView {
     
     //MARK: - UI Property
     let buttons = [
-        SortButton(title: "정확도"),
-        SortButton(title: "날짜순"),
-        SortButton(title: "가격높은순"),
-        SortButton(title: "가격낮은순"),
+        SortButton(Sort.sim),
+        SortButton(Sort.date),
+        SortButton(Sort.dsc),
+        SortButton(Sort.asc),
     ]
     
     //MARK: - Override Method
-//    init(action: ) {
-//        super.init(frame: .zero)
-//        
-//        configureStackView()
-//        configureButtons()
-//    }
-    
     override init(frame: CGRect) {
         super.init(frame: frame)
         
