@@ -28,11 +28,12 @@ enum Sort: String {
 class SortButton: CustomButton {
     
     //MARK: - Property
-    var sort: Sort?
-//    var select: Bool = false
+    var sort = Sort.sim
     
     init(_ type: Sort) {
         super.init(frame: .zero)
+        
+        let isActive = sort == type
         
         self.sort = type
         setTitle(type.title, for: .normal)
@@ -40,10 +41,15 @@ class SortButton: CustomButton {
         layer.borderWidth = 1
         layer.borderColor = UIColor.label.cgColor
         contentEdgeInsets = UIEdgeInsets(top: 0, left: 8, bottom: 0, right: 8)
-        backgroundColor = UIColor.systemBackground
         titleLabel?.font = UIFont.systemFont(ofSize: 14)
-        setTitleColor(UIColor.label, for: .normal)
+        configureColor(isActive)
     }
+    
+    func configureColor(_ isActive: Bool) {
+        backgroundColor = isActive ? UIColor.label : UIColor.systemBackground
+        setTitleColor(isActive ? UIColor.systemBackground : UIColor.label, for: .normal)
+    }
+    
 }
 
 class ShopSortButtonStackView: CustomStackView {
@@ -77,6 +83,12 @@ class ShopSortButtonStackView: CustomStackView {
             item.snp.makeConstraints { make in
                 make.height.equalTo(30)
             }
+        }
+    }
+    
+    func changeButtonColors(selected: Sort) {
+        for item in buttons {
+            item.configureColor(item.sort == selected)
         }
     }
     

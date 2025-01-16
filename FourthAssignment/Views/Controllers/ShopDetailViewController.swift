@@ -27,6 +27,12 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
             collectionView.reloadData()
         }
     }
+    var sort = Sort.sim {
+        didSet {
+            sortButtonStackView.changeButtonColors(selected: sort)
+            collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+        }
+    }
     
     //MARK: - UI Property
     let totalLabel = UILabel()
@@ -40,7 +46,7 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
         navigationItem.title = searchText
         
         if let searchText {
-            callShopRequest(query: searchText, sort: Sort.sim)
+            callShopRequest(query: searchText)
         }
         
         configureHierarchy()
@@ -51,7 +57,7 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
     }
     
     //MARK: - Method
-    func callShopRequest(query: String, sort: Sort) {
+    func callShopRequest(query: String) {
         let url = APIUrl.naverShop + "?query=\(query)&display=100&sort=\(sort.rawValue)"
         
         let header: HTTPHeaders = [
@@ -78,15 +84,16 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
     @objc func sortButtonTapped(_ sender: UIButton) {
         let button = sender as! SortButton
         
-        guard let sortType = button.sort else {
-            return
-        }
-        
         guard let searchText else {
             return
         }
         
-        callShopRequest(query: searchText, sort: sortType)
+        guard sort != button.sort else {
+            return
+        }
+        
+        sort = button.sort
+        callShopRequest(query: searchText)
     }
     
     //MARK: - Configure Method
