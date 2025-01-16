@@ -20,15 +20,18 @@ class ShopDetailViewController: UIViewController {
             }
         }
     }
+    let fixDisplay = 20
+    lazy var display = fixDisplay
     var sort = Sort.sim {
         didSet {
             guard sort != oldValue else {
                 return
             }
             
-            if let query {
+            if query != nil {
+                isEnd = false
+                display = fixDisplay
                 start = 1
-                callRequest(query)
                 mainView.sortButtonStackView.changeButtonColors(selected: sort)
             }
         }
@@ -50,6 +53,7 @@ class ShopDetailViewController: UIViewController {
             mainView.collectionView.reloadData()
         }
     }
+    var isEnd: Bool = false
     
     //MARK: - UI Property
     let mainView = ShopDetailView()
@@ -68,7 +72,7 @@ class ShopDetailViewController: UIViewController {
     
     //MARK: - Method
     func callRequest(_ query: String) {
-        let url = APIUrl.naverShop + "?query=\(query)&display=30&start=\(start)&sort=\(sort.rawValue)"
+        let url = APIUrl.naverShop + "?query=\(query)&display=\(display)&start=\(start)&sort=\(sort.rawValue)"
         
         let header: HTTPHeaders = [
             "X-Naver-Client-Id": APIKey.naverClientId,
@@ -138,10 +142,31 @@ extension ShopDetailViewController: UICollectionViewDelegate, UICollectionViewDa
 extension ShopDetailViewController: UICollectionViewDataSourcePrefetching {
     
     func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        
+        guard !isEnd else {
+            return
+        }
+        
         for item in indexPaths {
-            if list.count - 2 == item.row {
-                start += 1
+            guard list.count - 2 == item.row else {
+                return
             }
+            
+            guard display > 0 else {
+                return
+            }
+            
+            let holding = display * start
+            let remain = total - holding
+            
+            guard display < remain else {
+                display = remain
+                start = holding + 1
+                isEnd = true
+                return
+            }
+            
+            start += 1
         }
     }
     

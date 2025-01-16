@@ -19,6 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
 //        let nav = UINavigationController(rootViewController: ViewController())
         let nav = UINavigationController(rootViewController: ShopSearchViewController())
+//        let nav = UINavigationController(rootViewController: ShopDetailViewController())
         
         window?.rootViewController = nav
         window?.makeKeyAndVisible()
