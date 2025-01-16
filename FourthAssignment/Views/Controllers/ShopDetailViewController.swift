@@ -72,33 +72,19 @@ class ShopDetailViewController: UIViewController {
     
     //MARK: - Method
     func callRequest(_ query: String) {
-        NetworkManager.shared.naverSearchShop(query: query, display: display, start: start, sort: sort.rawValue)
-//        let url = APIUrl.naverShop + "?query=\(query)&display=\(display)&start=\(start)&sort=\(sort.rawValue)"
-//        
-//        let header: HTTPHeaders = [
-//            "X-Naver-Client-Id": APIKey.naverClientId,
-//            "X-Naver-Client-Secret": APIKey.naverClientSecret
-//        ]
-//        
-//        AF.request(url, method: .get, headers: header)
-//            .responseDecodable(of: Shop.self) { response in
-//                
-//                switch response.result {
-//                case .success(let data):
-//                    if self.start == 1 {
-//                        self.total = data.total
-//                        self.list = data.items
-//                        self.mainView.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
-//                    } else {
-//                        self.list.append(contentsOf: data.items)
-//                    }
-//                        
-//                case .failure(_):
-//                    self.total = 0
-//                    self.list = []
-//                        
-//                }
-//            }
+        NetworkManager.shared.naverSearchShop(query, display, start, sort.rawValue) { data in
+            if self.start == 1 {
+                self.total = data.total
+                self.list = data.items
+                self.mainView.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+            } else {
+                self.list.append(contentsOf: data.items)
+            }
+        }
+
+        // error
+//        self.total = 0
+//        self.list = []
     }
     
     @objc func sortButtonTapped(_ sender: UIButton) {
