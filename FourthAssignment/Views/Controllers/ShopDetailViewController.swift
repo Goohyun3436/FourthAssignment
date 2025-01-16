@@ -81,8 +81,8 @@ class ShopDetailViewController: UIViewController {
             } else {
                 self.list.append(contentsOf: data.items)
             }
-        }, errorHandler: { statusCode in
-            print(statusCode)
+        }, errorHandler: { err in
+            print(">>", err)
         })
 //        print("naverSearchShop Err: ", err)
         // error
