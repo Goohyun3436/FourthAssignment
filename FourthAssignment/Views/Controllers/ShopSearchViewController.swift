@@ -24,7 +24,6 @@ class ShopSearchViewController: UIViewController {
         mainView.searchBar.delegate = self
         
         navigationItem.title = "도봉러의 쇼핑쇼핑"
-        addBackButton(color: UIColor.label)
         configureBackButton(title: "")
     }
     
