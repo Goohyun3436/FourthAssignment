@@ -35,7 +35,7 @@ class ShopSearchView: BaseView {
     
     override func configureView() {
         backgroundColor = UIColor.systemBackground
-        statusLabel.text = SearchStatus.normal.text
+        statusLabel.text = "쇼핑하구팡"
         
         searchBar.placeholder = "브랜드, 상품, 프로필, 태그 등"
         searchBar.setValue("취소", forKey: "cancelButtonText")

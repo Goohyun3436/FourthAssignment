@@ -72,7 +72,8 @@ class ShopDetailViewController: UIViewController {
     
     //MARK: - Method
     func callRequest(_ query: String) {
-        NetworkManager.shared.naverSearchShop(query, display, start, sort.rawValue) { data in
+        NetworkManager.shared.naverSearchShop(query, display, start, sort.rawValue,
+        completionHandler: { data in
             if self.start == 1 {
                 self.total = data.total
                 self.list = data.items
@@ -80,8 +81,10 @@ class ShopDetailViewController: UIViewController {
             } else {
                 self.list.append(contentsOf: data.items)
             }
-        }
-
+        }, errorHandler: { statusCode in
+            print(statusCode)
+        })
+//        print("naverSearchShop Err: ", err)
         // error
 //        self.total = 0
 //        self.list = []

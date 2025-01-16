@@ -14,7 +14,7 @@ class NetworkManager {
     
     private init() {}
     
-    func naverSearchShop(_ query: String, _ display: Int, _ start: Int, _ sort: String, completionHandler: @escaping (Shop) -> Void) {
+    func naverSearchShop(_ query: String, _ display: Int, _ start: Int, _ sort: String, completionHandler: @escaping (Shop) -> Void, errorHandler: @escaping (Int?) -> Void) {
         let url = APIUrl.naverShop + "?query=\(query)&display=\(display)&start=\(start)&sort=\(sort)"
         
         let header: HTTPHeaders = [
@@ -30,12 +30,10 @@ class NetworkManager {
                     completionHandler(data)
                         
                 case .failure(let err):
-                    print("naverSearchShop Err: ", err)
+                    errorHandler(err.responseCode)
                         
                 }
             }
-        
-        
     }
     
 }

@@ -8,19 +8,6 @@
 import UIKit
 import SnapKit
 
-enum SearchStatus {
-    case normal, short
-    
-    var text: String {
-        switch self {
-            case .normal:
-                return "쇼핑하구팡"
-            case .short:
-                return "검색어를 2글자 이상 입력해주세요"
-        }
-    }
-}
-
 class ShopSearchViewController: UIViewController {
     
     //MARK: - UI Property
@@ -55,7 +42,6 @@ extension ShopSearchViewController: UISearchBarDelegate {
     
     func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
         searchBar.setShowsCancelButton(true, animated: true)
-        mainView.statusLabel.text = SearchStatus.normal.text
     }
     
     func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
@@ -66,12 +52,12 @@ extension ShopSearchViewController: UISearchBarDelegate {
         text = text.trimmingCharacters(in: .whitespaces)
         
         guard !text.isEmpty else {
-            mainView.statusLabel.text = SearchStatus.short.text
+            SearchAlert(SearchError.emptyQuery)
             return
         }
         
         guard text.count >= 2 else {
-            mainView.statusLabel.text = SearchStatus.short.text
+            SearchAlert(SearchError.shortQuery)
             return
         }
         
