@@ -1,5 +1,5 @@
 //
-//  BaseUIView.swift
+//  BaseView.swift
 //  FourthAssignment
 //
 //  Created by 구현 on 1/16/25.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class BaseUIView: UIView {
+class BaseView: UIView {
     
     override init(frame: CGRect) {
         super.init(frame: frame)

@@ -8,7 +8,7 @@
 import UIKit
 import SnapKit
 
-class ShopSearchView: BaseUIView {
+class ShopSearchView: BaseView {
     
     //MARK: - UI Property
     let searchBar = UISearchBar()

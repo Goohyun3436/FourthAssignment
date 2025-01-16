@@ -9,7 +9,7 @@ import UIKit
 import Alamofire
 import SnapKit
 
-class ShopDetailViewController: UIViewController, ViewConfiguration {
+class ShopDetailViewController: UIViewController {
     
     //MARK: - Property
     var query: String? {
@@ -24,34 +24,32 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
         didSet {
             if let query {
                 callRequest(query)
-                sortButtonStackView.changeButtonColors(selected: sort)
-                collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+                mainView.sortButtonStackView.changeButtonColors(selected: sort)
             }
         }
     }
     var total: Int = 0 {
         didSet {
-            totalLabel.text = "\(total.formatted()) 개의 검색 결과"
+            mainView.totalLabel.text = "\(total.formatted()) 개의 검색 결과"
         }
     }
     var list = [ShopItem]() {
         didSet {
-            collectionView.reloadData()
+            mainView.collectionView.reloadData()
         }
     }
     
     //MARK: - UI Property
-    let totalLabel = UILabel()
-    let sortButtonStackView = ShopSortButtonStackView()
-    let collectionView = ShopItemCollectionView()
+    let mainView = ShopDetailView()
     
     //MARK: - Override Method
+    override func loadView() {
+        view = mainView
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        configureHierarchy()
-        configureLayout()
-        configureView()
         configureSortButtons()
         configureCollectionView()
     }
@@ -72,6 +70,7 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
                 case .success(let data):
                     self.total = data.total
                     self.list = data.items
+                    self.mainView.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
                         
                 case .failure(_):
                     self.total = 0
@@ -92,48 +91,15 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
     }
     
     //MARK: - Configure Method
-    func configureHierarchy() {
-        view.addSubview(totalLabel)
-        view.addSubview(sortButtonStackView)
-        view.addSubview(collectionView)
-    }
-    
-    func configureLayout() {
-        totalLabel.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(16)
-            make.top.equalTo(view.safeAreaLayoutGuide).offset(16)
-        }
-        
-        sortButtonStackView.snp.makeConstraints { make in
-            make.leading.equalToSuperview().offset(16)
-            make.top.equalTo(totalLabel.snp.bottom).offset(8)
-        }
-        
-        collectionView.snp.makeConstraints { make in
-            make.horizontalEdges.equalToSuperview()
-            make.top.equalTo(sortButtonStackView.snp.bottom).offset(8)
-            make.bottom.equalTo(view.safeAreaLayoutGuide)
-        }
-    }
-    
-    func configureView() {
-        view.backgroundColor = UIColor.systemBackground
-        
-        totalLabel.font = UIFont.systemFont(ofSize: 12, weight: .bold)
-        totalLabel.textColor = UIColor.systemGreen
-    }
-    
     func configureSortButtons() {
-        for item in sortButtonStackView.buttons {
+        for item in mainView.sortButtonStackView.buttons {
             item.addTarget(self, action: #selector(sortButtonTapped(_:)), for: .touchUpInside)
         }
     }
     
     func configureCollectionView() {
-        collectionView.delegate = self
-        collectionView.dataSource = self
-        
-        collectionView.register(ShopDetailCollectionViewCell.self, forCellWithReuseIdentifier: ShopDetailCollectionViewCell.identifier)
+        mainView.collectionView.delegate = self
+        mainView.collectionView.dataSource = self
     }
 
 }
