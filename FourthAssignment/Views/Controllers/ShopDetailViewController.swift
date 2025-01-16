@@ -12,16 +12,20 @@ import SnapKit
 class ShopDetailViewController: UIViewController, ViewConfiguration {
     
     //MARK: - Property
-    var searchText: String? {
-        didSet {
-            navigationItem.title = searchText
-        }
-    }
     var query: String? {
         didSet {
             if let query {
-                callShopRequest(query)
+                callRequest(query)
                 navigationItem.title = query
+            }
+        }
+    }
+    var sort = Sort.sim {
+        didSet {
+            if let query {
+                callRequest(query)
+                sortButtonStackView.changeButtonColors(selected: sort)
+                collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
             }
         }
     }
@@ -33,15 +37,6 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
     var list = [ShopItem]() {
         didSet {
             collectionView.reloadData()
-        }
-    }
-    var sort = Sort.sim {
-        didSet {
-            if let query {
-                callShopRequest(query)
-                sortButtonStackView.changeButtonColors(selected: sort)
-                collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
-            }
         }
     }
     
@@ -62,7 +57,7 @@ class ShopDetailViewController: UIViewController, ViewConfiguration {
     }
     
     //MARK: - Method
-    func callShopRequest(_ query: String) {
+    func callRequest(_ query: String) {
         let url = APIUrl.naverShop + "?query=\(query)&display=100&sort=\(sort.rawValue)"
         
         let header: HTTPHeaders = [
