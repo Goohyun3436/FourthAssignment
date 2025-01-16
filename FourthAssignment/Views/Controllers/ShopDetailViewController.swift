@@ -20,7 +20,7 @@ class ShopDetailViewController: UIViewController {
             }
         }
     }
-    let fixDisplay = 20
+    let fixDisplay = 30
     lazy var display = fixDisplay
     var sort = Sort.sim {
         didSet {
