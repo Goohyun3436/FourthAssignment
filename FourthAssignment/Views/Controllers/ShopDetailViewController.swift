@@ -22,9 +22,21 @@ class ShopDetailViewController: UIViewController {
     }
     var sort = Sort.sim {
         didSet {
+            guard sort != oldValue else {
+                return
+            }
+            
             if let query {
+                start = 1
                 callRequest(query)
                 mainView.sortButtonStackView.changeButtonColors(selected: sort)
+            }
+        }
+    }
+    var start: Int = 1 {
+        didSet {
+            if let query {
+                callRequest(query)
             }
         }
     }
@@ -56,7 +68,7 @@ class ShopDetailViewController: UIViewController {
     
     //MARK: - Method
     func callRequest(_ query: String) {
-        let url = APIUrl.naverShop + "?query=\(query)&display=100&sort=\(sort.rawValue)"
+        let url = APIUrl.naverShop + "?query=\(query)&display=30&start=\(start)&sort=\(sort.rawValue)"
         
         let header: HTTPHeaders = [
             "X-Naver-Client-Id": APIKey.naverClientId,
@@ -68,9 +80,13 @@ class ShopDetailViewController: UIViewController {
                 
                 switch response.result {
                 case .success(let data):
-                    self.total = data.total
-                    self.list = data.items
-                    self.mainView.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+                    if self.start == 1 {
+                        self.total = data.total
+                        self.list = data.items
+                        self.mainView.collectionView.scrollToItem(at: IndexPath(row: 0, section: 0), at: .top, animated: false)
+                    } else {
+                        self.list.append(contentsOf: data.items)
+                    }
                         
                 case .failure(_):
                     self.total = 0
@@ -82,11 +98,6 @@ class ShopDetailViewController: UIViewController {
     
     @objc func sortButtonTapped(_ sender: UIButton) {
         let button = sender as! SortButton
-        
-        guard sort != button.sort else {
-            return
-        }
-        
         sort = button.sort
     }
     
@@ -100,6 +111,7 @@ class ShopDetailViewController: UIViewController {
     func configureCollectionView() {
         mainView.collectionView.delegate = self
         mainView.collectionView.dataSource = self
+        mainView.collectionView.prefetchDataSource = self
     }
 
 }
@@ -119,6 +131,18 @@ extension ShopDetailViewController: UICollectionViewDelegate, UICollectionViewDa
         cell.configureData(row)
         
         return cell
+    }
+    
+}
+
+extension ShopDetailViewController: UICollectionViewDataSourcePrefetching {
+    
+    func collectionView(_ collectionView: UICollectionView, prefetchItemsAt indexPaths: [IndexPath]) {
+        for item in indexPaths {
+            if list.count - 2 == item.row {
+                start += 1
+            }
+        }
     }
     
 }
